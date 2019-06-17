@@ -63,8 +63,7 @@ public class LamportThread extends Thread {
 
 
 
-        while (true) {
-            while (true) {
+
 
 
 //                ips.add(String.valueOf(peerList[0]).split(" "));
@@ -76,8 +75,11 @@ public class LamportThread extends Thread {
 
                 System.out.println("Porta: "+socket.getLocalPort());
                 //recebe mensagem e processa
+
                 if (socket.getLocalPort() == 4701) {
+                    while(true){
                     byte[] buf = new byte[1024];
+
                     packet = new DatagramPacket(buf, buf.length);
                     try {
                         socket.receive(packet);
@@ -99,10 +101,14 @@ public class LamportThread extends Thread {
                         relogio = relogioReceive + 1;
                     } else {
                         relogio++;
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    System.out.println(relogio);
-                } else {
-                    if (socket.getLocalPort() == 4700) {
+                    System.out.println(relogio);}
+                } else if (socket.getLocalPort() == 4700) {
                         byte[] buf = new byte[1024];
                         packet = new DatagramPacket(buf, buf.length);
                         while (true) {
@@ -117,15 +123,13 @@ public class LamportThread extends Thread {
                                     break;
                                 case 2:
                                     //variável random com o tamanho igual a quantidade de nodos
-                                    int nodos = random.nextInt(peerList.length);
-
-
-
+                                    int nodos = random.nextInt(peerList.length -1);
                                     String msg = System.currentTimeMillis() + " " + id + " " + relogio + " " + nodos;
                                     buf = msg.getBytes();
                                     packet = new DatagramPacket(buf, buf.length);
                                     InetAddress address = null;
                                     try {
+                                        System.out.println("ip: "+ips.get(nodos)[1]);
                                         address = InetAddress.getByName(ips.get(nodos)[1]);
                                     } catch (UnknownHostException e) {
                                         e.printStackTrace();
@@ -137,18 +141,21 @@ public class LamportThread extends Thread {
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-
+                                    try {
+                                        Thread.sleep(2000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
                                     break;
                             }
                         }
-                    }
+                    }socket.close();
                 }
-                socket.close();
+
             }
 
-        }
-    }
-}
+
+
 
 
 

@@ -16,7 +16,7 @@ public class Lamport {
 //            return;
 //        }
 
-//        Thread.sleep(5000);
+       Thread.sleep(2000);
 
         new LamportThread("4700").start();
         new LamportThread("4701").start();
